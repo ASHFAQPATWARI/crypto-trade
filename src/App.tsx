@@ -1,8 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { RequireAuth } from "components";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import useStore from "store/AppStore";
+import { Home } from "views/home";
+import { Layout } from "views/layout";
+import { Trade } from "views/trade";
+import "./App.css";
+import logo from "./logo.svg";
 
 function App() {
+  const [username, signin] = useStore((state) => [
+    state.username,
+    state.signin,
+  ]);
   return (
     <div className="App">
       <header className="App-header">
@@ -16,9 +26,24 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn ${username}
         </a>
+        <button onClick={() => signin("zohrat")}>change name</button>
       </header>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/login" element={<Login />} /> */}
+          <Route
+            path="/trade"
+            element={
+              <RequireAuth>
+                <Trade />
+              </RequireAuth>
+            }
+          />
+        </Route>
+      </Routes>
     </div>
   );
 }
