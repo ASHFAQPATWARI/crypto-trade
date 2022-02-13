@@ -19,7 +19,6 @@ function Home() {
     getNextPageParam: (lastPage, pages) => pages.length + 1,
   });
 
-  console.log("errors", isError, error, isLoading);
   if (isLoading || isIdle) return <p>Loading</p>;
 
   if (isError && error instanceof Error)

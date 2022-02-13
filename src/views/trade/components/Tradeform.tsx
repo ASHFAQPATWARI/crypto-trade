@@ -39,9 +39,7 @@ function Tradeform() {
 
   const currentEditingValue = isSwapped ? flatAmount : cryptoAmount;
   useEffect(() => {
-    console.log("usefect called");
     if (selectedExchangeAsset && cryptoAmount) {
-      console.log("new selected exchange", selectedExchangeAsset);
       if (isSwapped) {
         setCryptoAmount(
           (Number(flatAmount) / selectedExchangeAsset.price_usd)
