@@ -9,6 +9,9 @@ interface IAssetTable {
   assets: IAsset[];
 }
 
+type TSortDirection = null | "asc" | "desc";
+type TSortKey = null | "name" | "price";
+
 function renderTableBodyRow(asset: IAsset) {
   const classes = "border-slate-600 p-4 pl-8 text-white";
   return (
@@ -30,7 +33,7 @@ function renderTableBodyRow(asset: IAsset) {
   );
 }
 
-export const onSort = (
+const onSort = (
   sortKey: "name" | "price",
   direction: "asc" | "desc",
   data: IAsset[]
@@ -43,9 +46,6 @@ export const onSort = (
   if (direction === "desc") data.reverse();
   return data;
 };
-
-type TSortDirection = null | "asc" | "desc";
-type TSortKey = null | "name" | "price";
 
 interface ISortModel {
   sortKey: TSortKey;
@@ -70,33 +70,31 @@ function Table({ assets }: IAssetTable) {
     direction: null,
   });
 
-  function setSortedAssetsDeep(data: IAsset[]) {
-    setSortedAssets(JSON.parse(JSON.stringify(data)));
-  }
-
   useEffect(() => {
-    setSortedAssetsDeep(assets);
-  }, [assets]);
+    let data = JSON.parse(JSON.stringify(assets));
+    if (sortModel.sortKey && sortModel.direction) {
+      data = onSort(sortModel.sortKey, sortModel.direction, data);
+      // setSortedAssets(data);
+    }
+    setSortedAssets(data);
+  }, [assets, sortModel]);
 
   const handleSort = (key: "name" | "price") => {
     const currentDirection = sortModel.direction;
-    const direction =
-      currentDirection === null
-        ? "asc"
-        : currentDirection === "asc"
-        ? "desc"
-        : null;
+    let direction: TSortDirection = "asc";
+    if (key === sortModel.sortKey) {
+      direction =
+        currentDirection === null
+          ? "asc"
+          : currentDirection === "asc"
+          ? "desc"
+          : null;
+    }
+
     setsortModel((prev) => ({
       sortKey: key,
       direction: direction,
     }));
-
-    if (direction) {
-      const data = onSort(key, direction, sortedAssets);
-      setSortedAssets(data);
-    } else {
-      setSortedAssetsDeep(assets);
-    }
   };
 
   function renderTableHeader() {
