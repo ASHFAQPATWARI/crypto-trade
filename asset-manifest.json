@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/crypto-trade/static/css/main.72d1c45f.css",
-    "main.js": "/crypto-trade/static/js/main.b4ccd45e.js",
+    "main.js": "/crypto-trade/static/js/main.2cc820d1.js",
     "static/js/787.533262d7.chunk.js": "/crypto-trade/static/js/787.533262d7.chunk.js",
     "index.html": "/crypto-trade/index.html",
     "main.72d1c45f.css.map": "/crypto-trade/static/css/main.72d1c45f.css.map",
-    "main.b4ccd45e.js.map": "/crypto-trade/static/js/main.b4ccd45e.js.map",
+    "main.2cc820d1.js.map": "/crypto-trade/static/js/main.2cc820d1.js.map",
     "787.533262d7.chunk.js.map": "/crypto-trade/static/js/787.533262d7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.72d1c45f.css",
-    "static/js/main.b4ccd45e.js"
+    "static/js/main.2cc820d1.js"
   ]
 }
