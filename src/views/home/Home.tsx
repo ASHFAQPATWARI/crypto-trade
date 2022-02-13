@@ -16,6 +16,7 @@ function Home() {
     fetchNextPage,
   } = useInfiniteQuery(["projects"], fetchAssets, {
     keepPreviousData: true,
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, pages) => pages.length + 1,
   });
 

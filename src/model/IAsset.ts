@@ -1,7 +1,8 @@
 export interface IAsset {
   id: string;
-  name: boolean;
+  name: string;
   symbol: boolean;
+  price: number;
   metrics: {
     market_data: {
       price_usd: number;

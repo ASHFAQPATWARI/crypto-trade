@@ -18,11 +18,15 @@ export const fetchAssets = async ({ pageParam = 1 }): Promise<IAsset[]> => {
     `https://data.messari.io/api/v2/assets?fields=id,name,symbol,metrics/market_data/price_usd&page=${pageParam}&limit=10`
   );
 
-  const data = (await response.json()) as IAssetResponse;
+  let data = (await response.json()) as IAssetResponse;
 
   if (!response.ok) {
     throw new Error(data.status.error_message);
   }
+
+  data.data = data.data.map((asset) => {
+    return { ...asset, price: asset.metrics.market_data.price_usd };
+  });
 
   return data.data;
 };

@@ -1,36 +1,15 @@
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import { LOGO_URL } from "constants/constants";
 import { IAsset } from "model/IAsset";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { formatPrice } from "services/utility";
 
 interface IAssetTable {
   assets: IAsset[];
 }
 
-function renderTableHeader() {
-  const classes =
-    "border-slate-600 font-medium p-4 pl-8 text-slate-400 text-slate-200 text-left";
-
-  return (
-    <thead className="bg-gray-900">
-      <tr>
-        <th className={classes}>Coin Name</th>
-        <th className={classes}>Coin Symbol</th>
-        <th className={classes}>Price</th>
-        <th className={classes}>Action</th>
-      </tr>
-    </thead>
-  );
-}
-
 function renderTableBodyRow(asset: IAsset) {
-  const {
-    metrics: {
-      market_data: { price_usd },
-    },
-  } = asset;
   const classes = "border-slate-600 p-4 pl-8 text-white";
   return (
     <tr className="hover:bg-slate-700" key={asset.id}>
@@ -43,7 +22,7 @@ function renderTableBodyRow(asset: IAsset) {
         {asset.name}
       </td>
       <td className={classes}>{asset.symbol}</td>
-      <td className={classes}>{formatPrice(price_usd)}</td>
+      <td className={classes}>{formatPrice(asset.price)}</td>
       <td className={classes}>
         <Options />
       </td>
@@ -51,13 +30,114 @@ function renderTableBodyRow(asset: IAsset) {
   );
 }
 
+export const onSort = (
+  sortKey: "name" | "price",
+  direction: "asc" | "desc",
+  data: IAsset[]
+): IAsset[] => {
+  if (sortKey === "name") {
+    data.sort((a, b) => a["name"].localeCompare(b["name"]));
+  } else {
+    data.sort((a, b) => a.price - b.price);
+  }
+  if (direction === "desc") data.reverse();
+  return data;
+};
+
+type TSortDirection = null | "asc" | "desc";
+type TSortKey = null | "name" | "price";
+
+interface ISortModel {
+  sortKey: TSortKey;
+  direction: TSortDirection;
+}
+
+function ReturnSortIcon(type: TSortDirection) {
+  switch (type) {
+    case "asc":
+      return <ChevronUpIcon className="h-4 w-4 inline" />;
+    case "desc":
+      return <ChevronDownIcon className="h-4 w-4 inline" />;
+    default:
+      break;
+  }
+}
+
 function Table({ assets }: IAssetTable) {
+  const [sortedAssets, setSortedAssets] = useState<IAsset[]>([]);
+  const [sortModel, setsortModel] = useState<ISortModel>({
+    sortKey: null,
+    direction: null,
+  });
+
+  function setSortedAssetsDeep(data: IAsset[]) {
+    setSortedAssets(JSON.parse(JSON.stringify(data)));
+  }
+
+  useEffect(() => {
+    console.log("assets changed");
+
+    setSortedAssetsDeep(assets);
+  }, [assets]);
+
+  const handleSort = (key: "name" | "price") => {
+    const currentDirection = sortModel.direction;
+    const direction =
+      currentDirection === null
+        ? "asc"
+        : currentDirection === "asc"
+        ? "desc"
+        : null;
+    setsortModel((prev) => ({
+      sortKey: key,
+      direction: direction,
+    }));
+
+    if (direction) {
+      const data = onSort(key, direction, sortedAssets);
+      console.log("sroted data", data);
+      setSortedAssets(data);
+    } else {
+      console.log("old assets", assets);
+      setSortedAssetsDeep(assets);
+    }
+  };
+
+  function renderTableHeader() {
+    const classes =
+      "border-slate-600 font-medium p-4 pl-8 text-slate-400 text-slate-200 text-left";
+
+    return (
+      <thead className="bg-gray-900">
+        <tr>
+          <th
+            className={`${classes} cursor-pointer`}
+            onClick={() => handleSort("name")}
+          >
+            Coin Name{" "}
+            {sortModel.sortKey === "name" &&
+              sortModel.direction !== null &&
+              ReturnSortIcon(sortModel.direction)}
+          </th>
+          <th className={classes}>Coin Symbol</th>
+          <th className={classes} onClick={() => handleSort("price")}>
+            Price{" "}
+            {sortModel.sortKey === "price" &&
+              sortModel.direction !== null &&
+              ReturnSortIcon(sortModel.direction)}
+          </th>
+          <th className={classes}>Action</th>
+        </tr>
+      </thead>
+    );
+  }
+
   return (
     <>
       <table className="border-collapse table-auto w-full text-sm">
         {renderTableHeader()}
         <tbody className="bg-slate-800">
-          {assets.map((asset) => renderTableBodyRow(asset))}
+          {sortedAssets.map((asset) => renderTableBodyRow(asset))}
         </tbody>
       </table>
     </>
