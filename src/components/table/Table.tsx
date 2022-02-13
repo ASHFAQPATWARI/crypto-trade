@@ -120,7 +120,10 @@ function Table({ assets }: IAssetTable) {
               ReturnSortIcon(sortModel.direction)}
           </th>
           <th className={classes}>Coin Symbol</th>
-          <th className={classes} onClick={() => handleSort("price")}>
+          <th
+            className={`${classes} cursor-pointer`}
+            onClick={() => handleSort("price")}
+          >
             Price{" "}
             {sortModel.sortKey === "price" &&
               sortModel.direction !== null &&
