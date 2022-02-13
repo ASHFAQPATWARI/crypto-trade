@@ -75,8 +75,6 @@ function Table({ assets }: IAssetTable) {
   }
 
   useEffect(() => {
-    console.log("assets changed");
-
     setSortedAssetsDeep(assets);
   }, [assets]);
 
@@ -95,10 +93,8 @@ function Table({ assets }: IAssetTable) {
 
     if (direction) {
       const data = onSort(key, direction, sortedAssets);
-      console.log("sroted data", data);
       setSortedAssets(data);
     } else {
-      console.log("old assets", assets);
       setSortedAssetsDeep(assets);
     }
   };
