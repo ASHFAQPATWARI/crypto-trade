@@ -1,7 +1,8 @@
 export interface IAppStore {
-  username: string;
   isAuthenticated: boolean;
+  showLogin: boolean;
   assets: [string];
-  signin: (name: string) => void;
+  signin: () => void;
   signout: () => void;
+  setShowLogin: (show: boolean) => void;
 }

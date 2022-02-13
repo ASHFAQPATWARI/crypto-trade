@@ -7,12 +7,13 @@ const useStore = create<IAppStore>(
     (set) => ({
       username: "",
       isAuthenticated: false,
+      showLogin: false,
       assets: ["bitcoin"],
-      signin: (name) =>
+      signin: () =>
         set(
           (state) => {
-            state.username = name;
             state.isAuthenticated = true;
+            state.setShowLogin(false);
           },
           false,
           "signin"
@@ -24,6 +25,15 @@ const useStore = create<IAppStore>(
           },
           false,
           "signout"
+        );
+      },
+      setShowLogin: (show) => {
+        set(
+          (state) => {
+            state.showLogin = show;
+          },
+          false,
+          "setShowLogin"
         );
       },
     }),
