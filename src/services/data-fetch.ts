@@ -15,7 +15,7 @@ interface IAssetResponse {
  */
 export const fetchAssets = async ({ pageParam = 1 }): Promise<IAsset[]> => {
   const response = await fetch(
-    `https://data.messari.io/api/v2/assets?fields=id,name,symbol,metrics/market_data/price_usd&page=${pageParam}&limit=10`
+    `https://data.messari.io/api/v2/assets?fields=id,name,symbol,metrics/market_data/price_usd&page=${pageParam}&limit=10`,
   );
 
   let data = (await response.json()) as IAssetResponse;
@@ -37,14 +37,14 @@ export const fetchAssets = async ({ pageParam = 1 }): Promise<IAsset[]> => {
  */
 export const fetchAvailableAssets = async (): Promise<IExchangeAsset[]> => {
   const response = await fetch(
-    `https://rest-sandbox.coinapi.io/v1/assets?filter_asset_id=${SUPPORTED_ASSETS}`,
+    `https://rest.coinapi.io/v1/assets?filter_asset_id=${SUPPORTED_ASSETS}`,
     {
       method: "GET",
       mode: "cors",
       headers: {
         "X-CoinAPI-Key": EXCHANGE_API_KEY,
       },
-    }
+    },
   );
 
   const data = (await response.json()) as IExchangeAsset[];
